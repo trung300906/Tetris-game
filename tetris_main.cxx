@@ -113,6 +113,30 @@ bool canMove(int dx, int dy){
     return true;
 }
 
+void removeLine() {
+    for (int i = H - 2; i >= 0; i--) {
+        bool full = true;
+        for (int j = 1; j < W - 1; j++) {
+            if (board[i][j] == ' ') {
+                full = false;
+                break;
+            }
+        }
+        if (full) {
+            for (int k = i; k > 0; k--) {
+                for (int j = 1; j < W - 1; j++) {
+                    board[k][j] = board[k - 1][j];
+                }
+            }
+            for (int j = 1; j < W - 1; j++) {
+                board[0][j] = ' ';
+            }
+
+            i++;
+        }
+    }
+}
+
 int main()
 {
     srand(time(0));
