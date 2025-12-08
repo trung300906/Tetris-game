@@ -121,6 +121,7 @@ void draw() {
         }
         cout << endl;
     }
+    cout << "Speed: " << (250 - gameSpeed) << "   ";
 }
 
 bool canMove(int dx, int dy) {
@@ -148,11 +149,12 @@ void removeLine() {
             if (board[i][j] != ' ') count++;
             board[k][j] = board[i][j];
         }
-        
+
         if (count < W - 2) {
-            k--; 
-        } else {
-            updateSpeed(); 
+            k--;
+        }
+        else {
+            updateSpeed();
         }
     }
 }
@@ -191,7 +193,7 @@ int main()
             }
         }
 
-        if (canMove(0, 1)) 
+        if (canMove(0, 1))
             y++;
         else {
             block2Board();
@@ -199,7 +201,11 @@ int main()
             x = W / 2 - 2;
             y = 0;
             b = rand() % 7;
-            if (!canMove(0,0)) break;
+            if (!canMove(0, 0)) {
+                gotoxy(0, H + 2);
+                cout << "GAME OVER!";
+                break;
+            }
         }
         block2Board();
         draw();
