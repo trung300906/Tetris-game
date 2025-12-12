@@ -157,6 +157,61 @@ void removeLine() {
     }
 }
 
+void rotateShape(char dest[4][4], const char src[4][4]) {
+    const int N = 4;
+    for (int r = 0; r < N; r++) {
+        for (int c = 0; c < N; c++) {
+            dest[c][N - 1 - r] = src[r][c];
+        }
+    }
+}
+
+bool checkCollision(int x_pos, int y_pos, const char shape[4][4]) {
+    
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            if (shape[i][j] != ' ') {
+                int tx = x_pos + j;
+                int ty = y_pos + i;
+                
+                if (tx < 1 || tx >= W - 1 || ty >= H - 1) return true; 
+                
+                if (ty > 0 && board[ty][tx] != ' ') return true; 
+            }
+        }
+    }
+    return false;
+}
+
+
+void rotateCurrentBlock() {
+    char tempShape[4][4];
+    
+    rotateShape(tempShape, blocks[b]); 
+
+    if (!checkCollision(x, y, tempShape)) {
+        goto apply_rotation;
+    } 
+    
+    else {
+        if (!checkCollision(x + 1, y, tempShape)) {
+            x++; 
+            goto apply_rotation;
+        } 
+        
+        else if (!checkCollision(x - 1, y, tempShape)) {
+            x--; 
+            goto apply_rotation;
+        }
+        
+        return;
+    }
+
+    apply_rotation:
+    for(int i=0; i<4; i++) 
+        for(int j=0; j<4; j++) 
+            blocks[b][i][j] = tempShape[i][j];
+}
 int main()
 {
     srand(time(0));
@@ -180,6 +235,7 @@ int main()
                     if (canMove(0, 1)) y++;
                     break;
                 case 72:
+                    rotateCurrentBlock();
                     break;
                 }
             }
