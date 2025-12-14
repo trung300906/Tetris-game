@@ -276,7 +276,7 @@ void draw() {
         }
         cout << endl;
     }
-    cout << "Speed: " << (250 - gameSpeed) << " ";
+    cout << "Speed: " << (250 - gameSpeed) << " | Controls: Arrow Keys/WASD | Q: Quit   ";
 }
 
 bool canMove(int dx, int dy) {
