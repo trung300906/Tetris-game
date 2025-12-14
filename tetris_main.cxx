@@ -79,14 +79,11 @@ char blocks[][4][4] = {
 class OPiece : public Piece {
 public:
     OPiece() {
-        shape[1][1] = 'O';
-        shape[1][2] = 'O';
-        shape[2][1] = 'O';
-        shape[2][2] = 'O';
+        shape[1][1] = shape[1][2] = shape[2][1] = shape[2][2] = 'O';
     }
-
+    
     void rotate() override {
-        
+        // Khối O không đổi khi xoay
     }
 };
 
