@@ -76,6 +76,20 @@ char blocks[][4][4] = {
          {' ',' ',' ',' '}}
 };
 
+class OPiece : public Piece {
+public:
+    OPiece() {
+        shape[1][1] = 'O';
+        shape[1][2] = 'O';
+        shape[2][1] = 'O';
+        shape[2][2] = 'O';
+    }
+
+    void rotate() override {
+        
+    }
+};
+
 int x = 4, y = 0, b = 1;
 int gameSpeed = 200;
 
