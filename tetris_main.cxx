@@ -2,6 +2,7 @@
 #include <conio.h>
 #include <windows.h>
 #include <ctime>
+#include <cstdlib>
 using namespace std;
 
 #define H 21
@@ -10,74 +11,80 @@ using namespace std;
 char board[H][W] = {};
 
 char blocks[][4][4] = {
-    {{' ','I',' ',' '},
-         {' ','I',' ',' '},
-         {' ','I',' ',' '},
-         {' ','I',' ',' '}},
-        {{' ','I',' ',' '},
-         {' ','I',' ',' '},
-         {' ','I',' ',' '},
-         {' ','I',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {'I','I','I','I'},
-         {' ',' ',' ',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','T',' ',' '},
-         {'T','T','T',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','S','S',' '},
-         {'S','S',' ',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {'Z','Z',' ',' '},
-         {' ','Z','Z',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {'J',' ',' ',' '},
-         {'J','J','J',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ',' ','L',' '},
-         {'L','L','L',' '},
-         {' ',' ',' ',' '}}
+    {{' ','I',' ',' '},{' ','I',' ',' '},{' ','I',' ',' '},{' ','I',' ',' '}},
+    {{' ','I',' ',' '},{' ','I',' ',' '},{' ','I',' ',' '},{' ','I',' ',' '}},
+    {{' ',' ',' ',' '},{' ','O','O',' '},{' ','O','O',' '},{' ',' ',' ',' '}},
+    {{' ',' ',' ',' '},{' ','O','O',' '},{' ','O','O',' '},{' ',' ',' ',' '}},
+    {{' ',' ',' ',' '},{' ','O','O',' '},{' ','O','O',' '},{' ',' ',' ',' '}},
+    {{' ',' ',' ',' '},{' ','O','O',' '},{' ','O','O',' '},{' ',' ',' ',' '}},
+    {{' ',' ',' ',' '},{' ','O','O',' '},{' ','O','O',' '},{' ',' ',' ',' '}},
+    {{' ',' ',' ',' '},{' ','O','O',' '},{' ','O','O',' '},{' ',' ',' ',' '}},
+    {{' ',' ',' ',' '},{' ','O','O',' '},{' ','O','O',' '},{' ',' ',' ',' '}},
+    {{' ',' ',' ',' '},{'I','I','I','I'},{' ',' ',' ',' '},{' ',' ',' ',' '}},
+    {{' ',' ',' ',' '},{' ','O','O',' '},{' ','O','O',' '},{' ',' ',' ',' '}},
+    {{' ',' ',' ',' '},{' ','T',' ',' '},{'T','T','T',' '},{' ',' ',' ',' '}},
+    {{' ',' ',' ',' '},{' ','S','S',' '},{'S','S',' ',' '},{' ',' ',' ',' '}},
+    {{' ',' ',' ',' '},{'Z','Z',' ',' '},{' ','Z','Z',' '},{' ',' ',' ',' '}},
+    {{' ',' ',' ',' '},{'J',' ',' ',' '},{'J','J','J',' '},{' ',' ',' ',' '}},
+    {{' ',' ',' ',' '},{' ',' ','L',' '},{'L','L','L',' '},{' ',' ',' ',' '}}
 };
 
-int x = 4, y = 0, b = 1;
+int x = 4, y = 0, b = 1; 
 int gameSpeed = 200;
+
+class Piece {
+protected:
+    char shape[4][4];
+    int rotationState;
+public:
+    Piece() : rotationState(0) { for (int i = 0; i < 4; i++) for (int j = 0; j < 4; j++) shape[i][j] = ' '; }
+    virtual ~Piece() {}
+    void rotateClockwise() {
+        char temp[4][4];
+        const int N = 4;
+        for (int r = 0; r < N; r++)
+            for (int c = 0; c < N; c++)
+                temp[c][N - 1 - r] = shape[r][c];
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < N; j++)
+                shape[i][j] = temp[i][j];
+    }
+    virtual void rotate() = 0;
+    char getCell(int i, int j) const { return shape[i][j]; }
+};
+
+class RotatablePiece : public Piece {
+public:
+    void rotate() override {
+        this->rotateClockwise(); 
+        rotationState = (rotationState + 1) % 4;
+    }
+};
+
+class TPiece : public RotatablePiece {
+public:
+    TPiece() {
+        shape[1][1] = 'T';
+        shape[2][0] = shape[2][1] = shape[2][2] = 'T'; 
+        rotationState = 0;
+    }
+};
+
+class JPiece : public RotatablePiece {
+public:
+    JPiece() {
+        shape[1][0] = shape[2][0] = shape[2][1] = shape[2][2] = 'J';
+        rotationState = 0;
+    }
+};
+
+Piece* currentPiece = nullptr; 
+
+Piece* createRandomPiece() {
+    int type = rand() % 2; 
+    if (type == 0) return new TPiece();
+    else return new JPiece();
+}
 
 void gotoxy(int x, int y) {
     COORD c = { x, y };
@@ -86,24 +93,26 @@ void gotoxy(int x, int y) {
 
 void showCursor(bool show) {
     HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_CURSOR_INFO     cursorInfo;
+    CONSOLE_CURSOR_INFO cursorInfo;
     GetConsoleCursorInfo(out, &cursorInfo);
     cursorInfo.bVisible = show;
     SetConsoleCursorInfo(out, &cursorInfo);
 }
 
 void boardDelBlock() {
+    if (!currentPiece) return;
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
-            if (blocks[b][i][j] != ' ' && y + i < H && x + j < W)
+            if (currentPiece->getCell(i, j) != ' ' && y + i < H && x + j < W)
                 board[y + i][x + j] = ' ';
 }
 
 void block2Board() {
+    if (!currentPiece) return;
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
-            if (blocks[b][i][j] != ' ' && y + i < H && x + j < W)
-                board[y + i][x + j] = blocks[b][i][j];
+            if (currentPiece->getCell(i, j) != ' ' && y + i < H && x + j < W)
+                board[y + i][x + j] = currentPiece->getCell(i, j);
 }
 
 void initBoard() {
@@ -121,17 +130,18 @@ void draw() {
         }
         cout << endl;
     }
-    cout << "Speed: " << (250 - gameSpeed) << "   ";
+    cout << "Speed: " << (250 - gameSpeed) << " ";
 }
 
 bool canMove(int dx, int dy) {
+    if (!currentPiece) return false;
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
-            if (blocks[b][i][j] != ' ') {
+            if (currentPiece->getCell(i, j) != ' ') {
                 int tx = x + j + dx;
                 int ty = y + i + dy;
                 if (tx < 1 || tx >= W - 1 || ty >= H - 1) return false;
-                if (board[ty][tx] != ' ') return false;
+                if (ty >= 0 && board[ty][tx] != ' ') return false;
             }
     return true;
 }
@@ -159,66 +169,16 @@ void removeLine() {
     }
 }
 
-void rotateShape(char dest[4][4], const char src[4][4]) {
-    const int N = 4;
-    for (int r = 0; r < N; r++) {
-        for (int c = 0; c < N; c++) {
-            dest[c][N - 1 - r] = src[r][c];
-        }
-    }
-}
-
-bool checkCollision(int x_pos, int y_pos, const char shape[4][4]) {
-    
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            if (shape[i][j] != ' ') {
-                int tx = x_pos + j;
-                int ty = y_pos + i;
-                
-                if (tx < 1 || tx >= W - 1 || ty >= H - 1) return true; 
-                
-                if (ty > 0 && board[ty][tx] != ' ') return true; 
-            }
-        }
-    }
-    return false;
+void rotateCurrentBlock() { 
+    currentPiece->rotate();
 }
 
 
-void rotateCurrentBlock() {
-    char tempShape[4][4];
-    
-    rotateShape(tempShape, blocks[b]); 
-
-    if (!checkCollision(x, y, tempShape)) {
-        goto apply_rotation;
-    } 
-    
-    else {
-        if (!checkCollision(x + 1, y, tempShape)) {
-            x++; 
-            goto apply_rotation;
-        } 
-        
-        else if (!checkCollision(x - 1, y, tempShape)) {
-            x--; 
-            goto apply_rotation;
-        }
-        
-        return;
-    }
-
-    apply_rotation:
-    for(int i=0; i<4; i++) 
-        for(int j=0; j<4; j++) 
-            blocks[b][i][j] = tempShape[i][j];
-}
 int main()
 {
     srand(time(0));
     showCursor(false);
-    b = rand() % 7;
+    currentPiece = createRandomPiece();
     initBoard();
     while (1) {
         boardDelBlock();
@@ -237,7 +197,7 @@ int main()
                     if (canMove(0, 1)) y++;
                     break;
                 case 72:
-                    rotateCurrentBlock();
+                    rotateCurrentBlock(); 
                     break;
                 }
             }
@@ -256,7 +216,11 @@ int main()
             removeLine();
             x = W / 2 - 2;
             y = 0;
-            b = rand() % 7;
+            
+            delete currentPiece;
+            currentPiece = createRandomPiece(); 
+            b = rand() % 7; 
+            
             if (!canMove(0, 0)) {
                 gotoxy(0, H + 2);
                 cout << "GAME OVER!";
