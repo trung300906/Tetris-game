@@ -96,30 +96,23 @@ int gameSpeed = 200;
 class IPiece : public Piece {
 public:
     IPiece() {
-        shape[0][1] = 'I';
-        shape[1][1] = 'I';
-        shape[2][1] = 'I';
-        shape[3][1] = 'I';
-        rotationState = 0;
+        shape[0][1] = shape[1][1] = shape[2][1] = shape[3][1] = 'I';
     }
-
+    
     void rotate() override {
-        for (int i = 0; i < 4; i++)
-            for (int j = 0; j < 4; j++)
-                shape[i][j] = ' ';
-
         if (rotationState == 0) {
-            shape[1][0] = 'I';
-            shape[1][1] = 'I';
-            shape[1][2] = 'I';
-            shape[1][3] = 'I';
+            // Dọc -> Ngang
+            for (int i = 0; i < 4; i++)
+                for (int j = 0; j < 4; j++)
+                    shape[i][j] = ' ';
+            shape[1][0] = shape[1][1] = shape[1][2] = shape[1][3] = 'I';
             rotationState = 1;
-        }
-        else {
-            shape[0][1] = 'I';
-            shape[1][1] = 'I';
-            shape[2][1] = 'I';
-            shape[3][1] = 'I';
+        } else {
+            // Ngang -> Dọc
+            for (int i = 0; i < 4; i++)
+                for (int j = 0; j < 4; j++)
+                    shape[i][j] = ' ';
+            shape[0][1] = shape[1][1] = shape[2][1] = shape[3][1] = 'I';
             rotationState = 0;
         }
     }
