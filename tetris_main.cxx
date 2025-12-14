@@ -79,6 +79,38 @@ char blocks[][4][4] = {
 int x = 4, y = 0, b = 1;
 int gameSpeed = 200;
 
+class IPiece : public Piece {
+public:
+    IPiece() {
+        shape[0][1] = 'I';
+        shape[1][1] = 'I';
+        shape[2][1] = 'I';
+        shape[3][1] = 'I';
+        rotationState = 0;
+    }
+
+    void rotate() override {
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                shape[i][j] = ' ';
+
+        if (rotationState == 0) {
+            shape[1][0] = 'I';
+            shape[1][1] = 'I';
+            shape[1][2] = 'I';
+            shape[1][3] = 'I';
+            rotationState = 1;
+        }
+        else {
+            shape[0][1] = 'I';
+            shape[1][1] = 'I';
+            shape[2][1] = 'I';
+            shape[3][1] = 'I';
+            rotationState = 0;
+        }
+    }
+};
+
 void gotoxy(int x, int y) {
     COORD c = { x, y };
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
