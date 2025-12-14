@@ -50,6 +50,45 @@ public:
     }
 };
 
+// Khối I - xoay 2 trạng thái (ngang/dọc)
+class IPiece : public Piece {
+public:
+    IPiece() {
+        shape[0][1] = shape[1][1] = shape[2][1] = shape[3][1] = 'I';
+    }
+    
+    void rotate() override {
+        if (rotationState == 0) {
+            // Dọc -> Ngang
+            for (int i = 0; i < 4; i++)
+                for (int j = 0; j < 4; j++)
+                    shape[i][j] = ' ';
+            shape[1][0] = shape[1][1] = shape[1][2] = shape[1][3] = 'I';
+            rotationState = 1;
+        } else {
+            // Ngang -> Dọc
+            for (int i = 0; i < 4; i++)
+                for (int j = 0; j < 4; j++)
+                    shape[i][j] = ' ';
+            shape[0][1] = shape[1][1] = shape[2][1] = shape[3][1] = 'I';
+            rotationState = 0;
+        }
+    }
+};
+
+// Khối O - không xoay
+class OPiece : public Piece {
+public:
+    OPiece() {
+        shape[1][1] = shape[1][2] = shape[2][1] = shape[2][2] = 'O';
+    }
+    
+    void rotate() override {
+        // Khối O không đổi khi xoay
+    }
+};
+
+
 Piece* currentPiece = nullptr;
 
 
