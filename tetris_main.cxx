@@ -15,75 +15,29 @@ class Piece {
 protected:
     char shape[4][4];
     int rotationState;
-    
+
 public:
     Piece() : rotationState(0) {
         for (int i = 0; i < 4; i++)
             for (int j = 0; j < 4; j++)
                 shape[i][j] = ' ';
     }
-    
+
     virtual ~Piece() {}
-    
-    // Phương thức ảo thuần túy - bắt buộc các lớp con phải implement
+
     virtual void rotate() = 0;
-    
-    // Phương thức xoay cơ bản (clockwise 90 degrees)
-    void rotateClockwise() {
-        char temp[4][4];
-        for (int i = 0; i < 4; i++)
-            for (int j = 0; j < 4; j++)
-                temp[j][3 - i] = shape[i][j];
-        
-        for (int i = 0; i < 4; i++)
-            for (int j = 0; j < 4; j++)
-                shape[i][j] = temp[i][j];
-    }
-    
+
     char getCell(int i, int j) const {
         return shape[i][j];
     }
-    
-    void setCell(int i, int j, char c) {
-        shape[i][j] = c;
-    }
-    
-    int getRotationState() const { return rotationState; }
 };
 
-// Khối I - xoay 2 trạng thái (ngang/dọc)
-class IPiece : public Piece {
-public:
-    IPiece() {
-        shape[0][1] = shape[1][1] = shape[2][1] = shape[3][1] = 'I';
-    }
-    
-    void rotate() override {
-        if (rotationState == 0) {
-            // Dọc -> Ngang
-            for (int i = 0; i < 4; i++)
-                for (int j = 0; j < 4; j++)
-                    shape[i][j] = ' ';
-            shape[1][0] = shape[1][1] = shape[1][2] = shape[1][3] = 'I';
-            rotationState = 1;
-        } else {
-            // Ngang -> Dọc
-            for (int i = 0; i < 4; i++)
-                for (int j = 0; j < 4; j++)
-                    shape[i][j] = ' ';
-            shape[0][1] = shape[1][1] = shape[2][1] = shape[3][1] = 'I';
-            rotationState = 0;
-        }
-    }
-};
 
-// Khối O - không xoay
 class OPiece : public Piece {
 public:
     OPiece() {
         shape[1][1] = shape[1][2] = shape[2][1] = shape[2][2] = 'O';
     }
-    
     void rotate() override {
         // Khối O không đổi khi xoay
     }
@@ -121,77 +75,24 @@ public:
     }
 };
 
-// Khối S - xoay 2 trạng thái
-class SPiece : public Piece {
+class IPiece : public Piece {
 public:
-    SPiece() {
-        shape[1][1] = shape[1][2] = shape[2][0] = shape[2][1] = 'S';
+    IPiece() {
+        shape[0][1] = shape[1][1] = shape[2][1] = shape[3][1] = 'I';
     }
-    
     void rotate() override {
-        for (int i = 0; i < 4; i++)
-            for (int j = 0; j < 4; j++)
-                shape[i][j] = ' ';
-                
-        if (rotationState == 0) {
-            shape[0][1] = shape[1][1] = shape[1][2] = shape[2][2] = 'S';
-            rotationState = 1;
-        } else {
-            shape[1][1] = shape[1][2] = shape[2][0] = shape[2][1] = 'S';
-            rotationState = 0;
-        }
-    }
-};
 
-// Khối Z - xoay 2 trạng thái
-class ZPiece : public Piece {
-public:
-    ZPiece() {
-        shape[1][0] = shape[1][1] = shape[2][1] = shape[2][2] = 'Z';
-    }
-    
-    void rotate() override {
-        for (int i = 0; i < 4; i++)
-            for (int j = 0; j < 4; j++)
-                shape[i][j] = ' ';
-                
-        if (rotationState == 0) {
-            shape[0][2] = shape[1][1] = shape[1][2] = shape[2][1] = 'Z';
-            rotationState = 1;
-        } else {
-            shape[1][0] = shape[1][1] = shape[2][1] = shape[2][2] = 'Z';
-            rotationState = 0;
-        }
     }
 };
 
 // Khối J - xoay 4 trạng thái
 class JPiece : public Piece {
 public:
-    JPiece() {
-        shape[1][0] = shape[2][0] = shape[2][1] = shape[2][2] = 'J';
+    TPiece() {
+        shape[1][1] = 'T';
+        shape[2][0] = shape[2][1] = shape[2][2] = 'T';
     }
-    
     void rotate() override {
-        for (int i = 0; i < 4; i++)
-            for (int j = 0; j < 4; j++)
-                shape[i][j] = ' ';
-                
-        switch (rotationState) {
-            case 0:
-                shape[1][0] = shape[2][0] = shape[2][1] = shape[2][2] = 'J';
-                break;
-            case 1:
-                shape[0][1] = shape[0][2] = shape[1][1] = shape[2][1] = 'J';
-                break;
-            case 2:
-                shape[1][0] = shape[1][1] = shape[1][2] = shape[2][2] = 'J';
-                break;
-            case 3:
-                shape[0][1] = shape[1][1] = shape[2][0] = shape[2][1] = 'J';
-                break;
-        }
-        rotationState = (rotationState + 1) % 4;
     }
 };
 
@@ -200,27 +101,29 @@ class LPiece : public Piece {
 public:
     LPiece() {
         shape[1][2] = shape[2][0] = shape[2][1] = shape[2][2] = 'L';
+        rotationState = 0;
     }
-    
+
     void rotate() override {
         for (int i = 0; i < 4; i++)
             for (int j = 0; j < 4; j++)
                 shape[i][j] = ' ';
-                
+
         switch (rotationState) {
-            case 0:
-                shape[1][2] = shape[2][0] = shape[2][1] = shape[2][2] = 'L';
-                break;
-            case 1:
-                shape[0][1] = shape[1][1] = shape[2][1] = shape[2][2] = 'L';
-                break;
-            case 2:
-                shape[1][0] = shape[1][1] = shape[1][2] = shape[2][0] = 'L';
-                break;
-            case 3:
-                shape[0][0] = shape[0][1] = shape[1][1] = shape[2][1] = 'L';
-                break;
+        case 0:
+            shape[1][2] = shape[2][0] = shape[2][1] = shape[2][2] = 'L';
+            break;
+        case 1:
+            shape[0][1] = shape[1][1] = shape[2][1] = shape[2][2] = 'L';
+            break;
+        case 2:
+            shape[1][0] = shape[1][1] = shape[1][2] = shape[2][0] = 'L';
+            break;
+        case 3:
+            shape[0][0] = shape[0][1] = shape[1][1] = shape[2][1] = 'L';
+            break;
         }
+
         rotationState = (rotationState + 1) % 4;
     }
 };
@@ -235,55 +138,49 @@ void gotoxy(int x, int y) {
 }
 
 void showCursor(bool show) {
-    HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_CURSOR_INFO cursorInfo;
-    GetConsoleCursorInfo(out, &cursorInfo);
-    cursorInfo.bVisible = show;
-    SetConsoleCursorInfo(out, &cursorInfo);
-}
-
-void boardDelBlock() {
-    if (!currentPiece) return;
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
-            if (currentPiece->getCell(i, j) != ' ' && y + i < H && x + j < W)
-                board[y + i][x + j] = ' ';
-}
-
-void block2Board() {
-    if (!currentPiece) return;
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
-            if (currentPiece->getCell(i, j) != ' ' && y + i < H && x + j < W)
-                board[y + i][x + j] = currentPiece->getCell(i, j);
+    CONSOLE_CURSOR_INFO info;
+    info.dwSize = 1;
+    info.bVisible = show;
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &info);
 }
 
 void initBoard() {
     for (int i = 0; i < H; i++)
         for (int j = 0; j < W; j++)
-            if ((i == H - 1) || (j == 0) || (j == W - 1)) board[i][j] = '#';
-            else board[i][j] = ' ';
+            board[i][j] = (i == H - 1 || j == 0 || j == W - 1) ? '#' : ' ';
 }
 
 void draw() {
     gotoxy(0, 0);
     for (int i = 0; i < H; i++) {
-        for (int j = 0; j < W; j++) {
+        for (int j = 0; j < W; j++)
             cout << board[i][j];
-        }
         cout << endl;
     }
-    cout << "Speed: " << (250 - gameSpeed) << " | Controls: Arrow Keys/WASD | Q: Quit   ";
+}
+
+void boardDelBlock() {
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            if (currentPiece->getCell(i, j) != ' ')
+                board[y + i][x + j] = ' ';
+}
+
+void block2Board() {
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            if (currentPiece->getCell(i, j) != ' ')
+                board[y + i][x + j] = currentPiece->getCell(i, j);
 }
 
 bool canMove(int dx, int dy) {
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
             if (currentPiece->getCell(i, j) != ' ') {
-                int tx = x + j + dx;
-                int ty = y + i + dy;
-                if (tx < 1 || tx >= W - 1 || ty >= H - 1) return false;
-                if (ty >= 0 && board[ty][tx] != ' ') return false;
+                int nx = x + j + dx;
+                int ny = y + i + dy;
+                if (nx <= 0 || nx >= W - 1 || ny >= H - 1) return false;
+                if (board[ny][nx] != ' ') return false;
             }
     return true;
 }
@@ -433,7 +330,24 @@ int main() {
                 if (c == 'w' || c == 'W') canRotate();
                 if (c == 'q' || c == 'Q') break;
             }
-        }
+            else if (c == 'd' || c == 'D') {
+                if (canMove(1, 0)) x++;
+            }
+            else if (c == 's' || c == 'S') {
+                if (canMove(0, 1)) y++;
+            }
+            else if (c == 'w' || c == 'W') {
+                rotateCurrentBlock();
+            }
+            else if (c == 0 || c == 224) {
+                char k = _getch();
+                if (k == 75 && canMove(-1, 0)) x--;
+                if (k == 77 && canMove(1, 0))  x++;
+                if (k == 80 && canMove(0, 1))  y++;
+                if (k == 72) rotateCurrentBlock();
+            }
+}
+
 
         if (canMove(0, 1))
             y++;
