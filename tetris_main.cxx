@@ -88,6 +88,12 @@ int main() {
             } else {
                 block2Board();
                 removeLine();
+
+                // Tăng 5% tốc độ rơi mỗi khi block được đặt xuống
+                gameSpeed = (int)(gameSpeed * 0.95);
+                if (gameSpeed < 50) gameSpeed = 50; // Giới hạn tối thiểu
+                dropSpeed = gameSpeed / 20;
+
                 x = W / 2 - 2;
                 y = 0;
                 delete currentPiece;
