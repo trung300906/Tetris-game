@@ -7,3 +7,4 @@
 #include "ZPiece.hpp"
 #include "JPiece.hpp"
 #include "LPiece.hpp"
+#include "GameRecord.hpp"
