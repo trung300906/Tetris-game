@@ -45,7 +45,7 @@ int main() {
                 frameCounter = dropSpeed; // Force immediate placement
             }
             else if (c == 'q' || c == 'Q') {
-                break;
+                goto end_game;
             }
 #ifdef _WIN32
             else if (c == 0 || c == 224) {
@@ -100,7 +100,7 @@ int main() {
                 currentPiece = createRandomPiece();
                 
                 if (!canMove(0, 0)) {
-                    break;
+                   goto end_game;
                 }
             }
             
@@ -110,7 +110,7 @@ int main() {
         
         sleepMs(20); // Smooth 50 FPS
     }
-    
+end_game:
     block2Board();
     draw();
     gotoxy(0, H + 1);
