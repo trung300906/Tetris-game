@@ -1,5 +1,4 @@
 #pragma once
-// Cross-platform functions
 #ifndef _WIN32
 struct termios orig_termios;
 
@@ -71,5 +70,34 @@ void sleepMs(int ms) {
     Sleep(ms);
 #else
     usleep(ms * 1000);
+#endif
+}
+
+void setTextColor(int color) {
+#ifdef _WIN32
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    int winColor = 7;
+    switch(color) {
+        case 0: winColor = 7; break; // Trắng
+        case 1: winColor = 12; break; // Đỏ
+        case 2: winColor = 10; break; // Xanh lá
+        case 3: winColor = 14; break; // Vàng
+        case 4: winColor = 9; break;  // Xanh dương
+        case 5: winColor = 13; break; // Tím
+        case 6: winColor = 11; break; // Cyan
+        case 9: winColor = 8; break;  // Màu xám cho khung
+    }
+    SetConsoleTextAttribute(hConsole, winColor);
+#else
+    switch(color) {
+        case 0: printf("\033[0m"); break;   // Reset
+        case 1: printf("\033[1;31m"); break; // Red
+        case 2: printf("\033[1;32m"); break; // Green
+        case 3: printf("\033[1;33m"); break; // Yellow
+        case 4: printf("\033[1;34m"); break; // Blue
+        case 5: printf("\033[1;35m"); break; // Magenta
+        case 6: printf("\033[1;36m"); break; // Cyan
+        case 9: printf("\033[1;30m"); break; // Grey
+    }
 #endif
 }

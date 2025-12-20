@@ -1,8 +1,11 @@
 #pragma once
 void initBoard() {
-    for (int i = 0; i < H; i++)
-        for (int j = 0; j < W; j++)
+    for (int i = 0; i < H; i++) {
+        for (int j = 0; j < W; j++) {
             board[i][j] = (i == H - 1 || j == 0 || j == W - 1) ? '#' : ' ';
+            boardColors[i][j] = (board[i][j] == '#') ? 9 : 0; // 9 là màu khung, 0 là ko màu
+        }
+    }
 }
 
 void drawUI() {
@@ -32,14 +35,30 @@ void draw() {
     gotoxy(0, 0);
     for (int i = 0; i < H; i++) {
         for (int j = 0; j < W; j++) {
-            if (board[i][j] == '#') {
-                cout << "█";
-            } else if (board[i][j] == ' ') {
-                cout << " ";
-            } else {
-                cout << "▓";
+            // Logic vẽ màu
+            int colorToDraw = boardColors[i][j];
+            
+            // Nếu vị trí này trùng với Piece đang rơi, ưu tiên lấy màu của Piece
+            if (currentPiece != nullptr) {
+                 // Map toạ độ màn hình (i,j) ngược về toạ độ piece (ni, nj)
+                 int ni = i - y;
+                 int nj = j - x;
+                 if (ni >= 0 && ni < 4 && nj >= 0 && nj < 4) {
+                     if (currentPiece->getCell(ni, nj) != ' ') {
+                         colorToDraw = currentPiece->color;
+                     }
+                 }
             }
+
+            // Thiết lập màu và vẽ
+            setTextColor(colorToDraw);
+            
+            if (board[i][j] == '#') cout << "█"; 
+            else if (currentPiece && i >= y && i < y+4 && j >= x && j < x+4 && currentPiece->getCell(i-y, j-x) != ' ') cout << "▓"; // Block đang rơi
+            else if (board[i][j] != ' ') cout << "▓"; // Block đã đóng băng
+            else cout << " ";
         }
+        setTextColor(0); // Reset màu về mặc định để không bị lem màu ra UI
         cout << endl;
     }
     drawUI();
@@ -57,8 +76,10 @@ void block2Board() {
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
             if (currentPiece->getCell(i, j) != ' ')
-                if (y + i >= 0 && y + i < H && x + j >= 0 && x + j < W)
+                if (y + i >= 0 && y + i < H && x + j >= 0 && x + j < W) {
                     board[y + i][x + j] = currentPiece->getCell(i, j);
+                    boardColors[y + i][x + j] = currentPiece->color;
+                }
 }
 
 bool canMove(int dx, int dy) {
@@ -115,26 +136,24 @@ void updateSpeed() {
 
 void removeLine() {
     int linesCleared = 0;
-    
     for (int i = H - 2; i > 0; i--) {
         int count = 0;
-        for (int j = 1; j < W - 1; j++) {
-            if (board[i][j] != ' ') count++;
-        }
+        for (int j = 1; j < W - 1; j++) if (board[i][j] != ' ') count++;
         
         if (count == W - 2) {
             linesCleared++;
-            // Move all lines above down
             for (int k = i; k > 0; k--) {
                 for (int j = 1; j < W - 1; j++) {
                     board[k][j] = board[k-1][j];
+                    boardColors[k][j] = boardColors[k-1][j]; // Dời màu xuống
                 }
             }
-            // Clear top line
+            // Xóa dòng trên cùng
             for (int j = 1; j < W - 1; j++) {
                 board[0][j] = ' ';
+                boardColors[0][j] = 0;
             }
-            i++; // Check this line again
+            i++; 
         }
     }
     

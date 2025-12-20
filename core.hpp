@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <string>
+#include <algorithm>
 
 #ifdef _WIN32
     #include <conio.h>
@@ -20,6 +21,7 @@ using namespace std;
 #define W 12
 
 char board[H][W] = {};
+int boardColors[H][W] = {};
 int gameSpeed = 500;
 int score = 0;
 int level = 1;
