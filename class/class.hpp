@@ -1,0 +1,9 @@
+#pragma once
+#include "Piece.hpp"
+#include "IPiece.hpp"
+#include "OPiece.hpp"
+#include "TPiece.hpp"
+#include "SPiece.hpp"
+#include "ZPiece.hpp"
+#include "JPiece.hpp"
+#include "LPiece.hpp"
