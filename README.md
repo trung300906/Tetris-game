@@ -13,21 +13,20 @@ file hpp should be just header where put class header or header of function
 ├── build
 │   └── Debug
 ├── class
-│   ├── class.hpp
-│   ├── IPiece.hpp
-│   ├── JPiece.hpp
-│   ├── LPiece.hpp
-│   ├── OPiece.hpp
-│   ├── Piece.hpp
-│   ├── SPiece.hpp
-│   ├── TPiece.hpp
-│   └── ZPiece.hpp
-├── core.hpp
-├── crossplatform.ipp
-├── function_logic.ipp
+│   ├── class.hpp \\ override source tree
+│   ├── IPiece.hpp \\ IPiece class 
+│   ├── JPiece.hpp \\ JPiece class
+│   ├── LPiece.hpp \\ LPiece class
+│   ├── OPiece.hpp \\ OPiece class
+│   ├── Piece.hpp \\ BASIC class
+│   ├── SPiece.hpp \\ SPiece class
+│   ├── TPiece.hpp \\ TPiece class
+│   └── ZPiece.hpp \\ZPiece
+├── core.hpp \\ basic support, where link library vs basic variables
+├── crossplatform.ipp \\ crossplatform function, support both linux vs windows
+├── function_logic.ipp \\ function logic, where provide logic for games
 ├── LICENSE
 ├── README.md
-├── tetris_main.cxx
-└── tetris_main.run
+└── tetris_main.cxx \\ main
 ```
 4 directories, 16 files
