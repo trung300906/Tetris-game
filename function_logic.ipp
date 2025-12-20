@@ -1,4 +1,98 @@
 #pragma once
+
+vector<GameRecord> loadScores() {
+    vector<GameRecord> records;
+    ifstream file("tetris_scores.txt");
+    
+    if (file.is_open()) {
+        GameRecord record;
+        while (file >> record.score >> record.level) {
+            file.ignore(); // Skip space
+            getline(file, record.date);
+            records.push_back(record);
+        }
+        file.close();
+    }
+    
+    return records;
+}
+
+void saveScore(int finalScore, int finalLevel) {
+    vector<GameRecord> records = loadScores();
+    
+    GameRecord newRecord;
+    newRecord.score = finalScore;
+    newRecord.level = finalLevel;
+    
+    // Get current time
+    time_t now = time(0);
+    tm* ltm = localtime(&now);
+    char timeStr[100];
+    sprintf(timeStr, "%02d/%02d/%04d %02d:%02d", 
+            ltm->tm_mday, ltm->tm_mon + 1, ltm->tm_year + 1900,
+            ltm->tm_hour, ltm->tm_min);
+    newRecord.date = timeStr;
+    
+    records.push_back(newRecord);
+    
+    // Sort by score (descending)
+    sort(records.begin(), records.end(), [](const GameRecord& a, const GameRecord& b) {
+        return a.score > b.score;
+    });
+    
+    // Keep only top 5
+    if (records.size() > 5) {
+        records.resize(5);
+    }
+    
+    // Save to file
+    ofstream file("tetris_scores.txt");
+    if (file.is_open()) {
+        for (const auto& record : records) {
+            file << record.score << " " << record.level << " " << record.date << endl;
+        }
+        file.close();
+    }
+}
+
+void showHighScores() {
+    vector<GameRecord> records = loadScores();
+    
+    clearScreen();
+    cout << "\n";
+    cout << "  ╔════════════════════════════════════════════════╗\n";
+    cout << "  ║           TETRIS - HIGH SCORES                 ║\n";
+    cout << "  ╚════════════════════════════════════════════════╝\n\n";
+
+    if (records.empty()) {
+        cout << "  No previous games recorded.\n";
+    } else {
+        int highestScore = records[0].score;
+        cout << "  Highest Score: " << highestScore << " (Level " << records[0].level << ")\n\n";
+        cout << "  Top 5 Scores:\n";
+        cout << "  ┌────┬─────────┬───────┬─────────────────────┐\n";
+        cout << "  │ #  │  Score  │ Level │        Date         │\n";
+        cout << "  ├────┼─────────┼───────┼─────────────────────┤\n";
+        
+        for (size_t i = 0; i < records.size(); i++) {
+            printf("  │ %2zu │ %7d │  %2d   │ %-19s │\n", 
+                   i + 1, records[i].score, records[i].level, records[i].date.c_str());
+        }
+        
+        cout << "  └────┴─────────┴───────┴─────────────────────┘\n";
+    }
+    
+    cout << "\n  Press any key to start game...";
+
+#ifdef _WIN32
+    _getch();
+#else
+    setupTerminal();
+    getch();
+    resetTerminal();
+#endif
+}
+
 void initBoard() {
     for (int i = 0; i < H; i++)
         for (int j = 0; j < W; j++)

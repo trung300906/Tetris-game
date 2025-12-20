@@ -9,7 +9,10 @@ int main() {
 #ifndef _WIN32
     setupTerminal();
 #endif
-    
+   
+    // Show high scores before starting game
+    showHighScores();
+
     clearScreen();
     showCursor(false);
     initBoard();
@@ -111,6 +114,10 @@ int main() {
         sleepMs(20); // Smooth 50 FPS
     }
     
+    // Save score to file
+    saveScore(score, level);
+    cout << "\nScore saved!" << endl;
+
     block2Board();
     draw();
     gotoxy(0, H + 1);
