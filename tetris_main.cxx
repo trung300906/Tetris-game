@@ -9,7 +9,10 @@ int main() {
 #ifndef _WIN32
     setupTerminal();
 #endif
-    
+   
+    // Show high scores before starting game
+    showHighScores();
+
     clearScreen();
     showCursor(false);
     initBoard();
@@ -45,7 +48,7 @@ int main() {
                 frameCounter = dropSpeed; // Force immediate placement
             }
             else if (c == 'q' || c == 'Q') {
-                goto end_game;
+               goto end;
             }
 #ifdef _WIN32
             else if (c == 0 || c == 224) {
@@ -89,8 +92,8 @@ int main() {
                 block2Board();
                 removeLine();
 
-                // Tăng 5% tốc độ rơi mỗi khi block được đặt xuống
-                gameSpeed = (int)(gameSpeed * 0.95);
+                // Tăng 1% tốc độ rơi mỗi khi block được đặt xuống
+                gameSpeed = (int)(gameSpeed * 0.99);
                 if (gameSpeed < 50) gameSpeed = 50; // Giới hạn tối thiểu
                 dropSpeed = gameSpeed / 20;
 
@@ -100,7 +103,7 @@ int main() {
                 currentPiece = createRandomPiece();
                 
                 if (!canMove(0, 0)) {
-                   goto end_game;
+                   goto end;
                 }
             }
             
@@ -110,7 +113,11 @@ int main() {
         
         sleepMs(20); // Smooth 50 FPS
     }
-end_game:
+end:   
+    // Save score to file
+    saveScore(score, level);
+    cout << "\nScore saved!" << endl;
+
     block2Board();
     draw();
     gotoxy(0, H + 1);

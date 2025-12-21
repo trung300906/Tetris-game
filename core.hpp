@@ -3,6 +3,9 @@
 #include <cstdlib>
 #include <ctime>
 #include <string>
+#include <fstream>
+#include <vector>
+#include <algorithm>
 
 #ifdef _WIN32
     #include <conio.h>
@@ -32,7 +35,7 @@ class SPiece;
 class ZPiece;
 class JPiece;
 class LPiece;
-
+struct GameRecord;
 // Game variables
 int x = 4, y = 0;
 Piece* currentPiece = nullptr;
