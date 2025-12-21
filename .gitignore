@@ -9,3 +9,4 @@
 *.run
 *.dll
 /build
+tetris_scores.txt
