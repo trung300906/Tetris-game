@@ -86,8 +86,14 @@ void showHighScores() {
     cout << "\n  Press any key to return to menu..." << flush;
     
     // Chỉ dùng getch() - terminal đã được setup sẵn từ main()
-    while(kbhit()) getch(); // Clear input buffer trước
-    getch(); // Đợi 1 phím bất kỳ
+    char choice;
+    while (true) {
+        // Chỉ dùng getch() - terminal đã được setup sẵn từ main()
+        choice = getch();
+        if (choice) {
+            break;
+        }
+    }
 }
 
 void initBoard() {
