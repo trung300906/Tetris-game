@@ -55,6 +55,7 @@ void saveScore(int finalScore, int finalLevel) {
     }
 }
 
+
 void showHighScores() {
     vector<GameRecord> records = loadScores();
     
@@ -83,7 +84,9 @@ void showHighScores() {
     }
     
     cout << "\n  Press any key to start game...";
-
+    // Dùng cin.get() cho cả Windows và Linux
+    sleepMs(5000); // Đảm bảo terminal đã sẵn sàng nhận input
+    cin.get();
 #ifdef _WIN32
     _getch();
 #else
