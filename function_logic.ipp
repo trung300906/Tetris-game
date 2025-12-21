@@ -83,17 +83,11 @@ void showHighScores() {
         cout << "  └────┴─────────┴───────┴─────────────────────┘\n";
     }
     
-    cout << "\n  Press any key to start game...";
-    // Dùng cin.get() cho cả Windows và Linux
-    sleepMs(5000); // Đảm bảo terminal đã sẵn sàng nhận input
-    cin.get();
-#ifdef _WIN32
-    _getch();
-#else
-    setupTerminal();
-    getch();
-    resetTerminal();
-#endif
+    cout << "\n  Press any key to return to menu..." << flush;
+    
+    // Chỉ dùng getch() - terminal đã được setup sẵn từ main()
+    while(kbhit()) getch(); // Clear input buffer trước
+    getch(); // Đợi 1 phím bất kỳ
 }
 
 void initBoard() {
