@@ -150,9 +150,8 @@ int main() {
         // Đợi input hợp lệ
         char choice;
         while (true) {
-                // Chỉ dùng getch() - terminal đã được setup sẵn từ main()
-        while(kbhit()) getch(); // Clear input buffer trước
-        getch(); // Đợi 1 phím bất kỳ
+            // Chỉ dùng getch() - terminal đã được setup sẵn từ main()
+            choice = getch();
             if (choice == '1' || choice == '2' || choice == '3') {
                 break;
             }
