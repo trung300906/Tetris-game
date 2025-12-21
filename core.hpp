@@ -23,6 +23,7 @@ using namespace std;
 #define W 12
 
 char board[H][W] = {};
+int boardColors[H][W] = {};
 int gameSpeed = 500;
 int score = 0;
 int level = 1;

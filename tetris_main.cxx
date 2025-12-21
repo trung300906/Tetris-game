@@ -3,26 +3,25 @@
 #include "class/class.hpp"
 #include "function_logic.ipp"
 
-int main() {
-    srand(time(0));
-    
-#ifndef _WIN32
-    setupTerminal();
-#endif
-   
-    // Show high scores before starting game
-    showHighScores();
-
-    clearScreen();
-    showCursor(false);
+void playGame() {
+    score = 0;
+    level = 1;
+    gameSpeed = 500;
+    x = 4; y = 0;
     initBoard();
+    if (currentPiece) {
+        delete currentPiece;
+        currentPiece = nullptr;
+    }
     currentPiece = createRandomPiece();
     
-    int frameCounter = 0;
-    int dropSpeed = gameSpeed / 20; // Divide into smaller frames
+    clearScreen();
+    showCursor(false);
     
+    int frameCounter = 0;
+    int dropSpeed = gameSpeed / 20;
+
     while (true) {
-        // Handle input (non-blocking)
         while (kbhit()) {
             int c = getch();
             
@@ -45,45 +44,37 @@ int main() {
             }
             else if (c == ' ') {
                 hardDrop();
-                frameCounter = dropSpeed; // Force immediate placement
+                frameCounter = dropSpeed;
             }
             else if (c == 'q' || c == 'Q') {
                goto end;
             }
-#ifdef _WIN32
+            #ifdef _WIN32
             else if (c == 0 || c == 224) {
                 char k = getch();
                 if (k == 75 && canMove(-1, 0)) x--; // Left
                 if (k == 77 && canMove(1, 0)) x++;  // Right
-                if (k == 80 && canMove(0, 1)) {     // Down
-                    y++;
-                    score += 1;
-                }
+                if (k == 80 && canMove(0, 1)) { y++; score++; } // Down
                 if (k == 72) rotateWithWallKick();  // Up
             }
-#else
+            #else
             else if (c == 27) {
-                getch(); // Skip [
+                getch();
                 char k = getch();
                 if (k == 'D' && canMove(-1, 0)) x--;
                 if (k == 'C' && canMove(1, 0)) x++;
-                if (k == 'B' && canMove(0, 1)) {
-                    y++;
-                    score += 1;
-                }
+                if (k == 'B' && canMove(0, 1)) { y++; score++; }
                 if (k == 'A') rotateWithWallKick();
             }
-#endif
+            #endif
             
             block2Board();
             draw();
         }
         
-        // Auto drop logic
         frameCounter++;
         if (frameCounter >= dropSpeed) {
             frameCounter = 0;
-            
             boardDelBlock();
             
             if (canMove(0, 1)) {
@@ -97,11 +88,12 @@ int main() {
                 if (gameSpeed < 50) gameSpeed = 50; // Giới hạn tối thiểu
                 dropSpeed = gameSpeed / 20;
 
-                x = W / 2 - 2;
-                y = 0;
+                // Tạo block mới
+                x = W / 2 - 2; y = 0;
                 delete currentPiece;
                 currentPiece = createRandomPiece();
                 
+                // Kiểm tra thua game ngay khi vừa tạo block mới
                 if (!canMove(0, 0)) {
                    goto end;
                 }
@@ -111,7 +103,7 @@ int main() {
             draw();
         }
         
-        sleepMs(20); // Smooth 50 FPS
+        sleepMs(20); 
     }
 end:   
     // Save score to file
@@ -120,17 +112,67 @@ end:
 
     block2Board();
     draw();
-    gotoxy(0, H + 1);
-    cout << "\n*** GAME OVER ***" << endl;
-    cout << "Final Score: " << score << endl;
-    cout << "Level Reached: " << level << endl;
     
-    delete currentPiece;
-    showCursor(true);
+    // Vẽ khung thông báo Game Over
+    setTextColor(3);
+    gotoxy(W + 3, 14); cout << "=== GAME OVER ===";
+    setTextColor(0);
     
-#ifndef _WIN32
+    gotoxy(W + 3, 15); cout << "Final Score: " << score;
+    gotoxy(W + 3, 17); cout << "Press any key";
+    gotoxy(W + 3, 18); cout << "to return menu...";
+    
+    while(kbhit()) getch();
+    getch();
+}
+
+int main() {
+    srand(time(0));
+    #ifndef _WIN32
+    setupTerminal();
+    #endif
+
+    while (true) {
+        clearScreen();
+        showCursor(true);
+        setTextColor(3);
+        cout << "=========================" << endl;
+        cout << "   SUPER TETRIS C++      " << endl;
+        cout << "=========================" << endl;
+        setTextColor(0); // Reset màu
+        
+        cout << "1. Play Game" << endl;
+        cout << "2. High Scores" << endl;
+        cout << "3. Exit" << endl;
+        cout << "\nChoose option (1-3): ";
+        cout.flush(); // Đảm bảo hiển thị ngay
+
+        // Đợi input hợp lệ
+        char choice;
+        while (true) {
+                // Chỉ dùng getch() - terminal đã được setup sẵn từ main()
+        while(kbhit()) getch(); // Clear input buffer trước
+        getch(); // Đợi 1 phím bất kỳ
+            if (choice == '1' || choice == '2' || choice == '3') {
+                break;
+            }
+        }
+        
+        if (choice == '1') {
+            playGame();
+        } 
+        else if (choice == '2') {
+            showHighScores();
+        }
+        else if (choice == '3') {
+            clearScreen();
+            cout << "\nGoodbye!" << endl;
+            break;
+        }
+    }
+
+    #ifndef _WIN32
     resetTerminal();
-#endif
-    
+    #endif
     return 0;
 }

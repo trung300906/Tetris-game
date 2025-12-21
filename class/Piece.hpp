@@ -6,10 +6,13 @@ protected:
     char symbol;
 
 public:
+    int color;
     Piece() : rotationState(0), symbol('X') {
         for (int i = 0; i < 4; i++)
             for (int j = 0; j < 4; j++)
                 shape[i][j] = ' ';
+        
+        color = 1 + rand() % 6;
     }
 
     virtual ~Piece() {}
