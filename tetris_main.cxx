@@ -83,8 +83,8 @@ void playGame() {
                 block2Board();
                 removeLine();
 
-                // Tăng 1% tốc độ rơi mỗi khi block được đặt xuống
-                gameSpeed = (int)(gameSpeed * 0.99);
+                // Tăng 5% tốc độ rơi mỗi khi block được đặt xuống
+                gameSpeed = (int)(gameSpeed * 0.95);
                 if (gameSpeed < 50) gameSpeed = 50; // Giới hạn tối thiểu
                 dropSpeed = gameSpeed / 20;
 
