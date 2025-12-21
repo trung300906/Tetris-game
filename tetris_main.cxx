@@ -13,7 +13,8 @@ void playGame() {
         delete currentPiece;
         currentPiece = nullptr;
     }
-    currentPiece = createRandomPiece();
+    if (nextPiece) { delete nextPiece; nextPiece = nullptr; }
+    currentPiece = getNextPiece();
     
     clearScreen();
     showCursor(false);
@@ -84,14 +85,14 @@ void playGame() {
                 removeLine();
 
                 // Tăng 5% tốc độ rơi mỗi khi block được đặt xuống
-                gameSpeed = (int)(gameSpeed * 0.95);
+                gameSpeed = (int)(gameSpeed * 0.97);
                 if (gameSpeed < 50) gameSpeed = 50; // Giới hạn tối thiểu
                 dropSpeed = gameSpeed / 20;
 
                 // Tạo block mới
                 x = W / 2 - 2; y = 0;
                 delete currentPiece;
-                currentPiece = createRandomPiece();
+                currentPiece = getNextPiece();
                 
                 // Kiểm tra thua game ngay khi vừa tạo block mới
                 if (!canMove(0, 0)) {

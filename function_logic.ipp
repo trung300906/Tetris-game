@@ -105,6 +105,29 @@ void initBoard() {
     }
 }
 
+void drawNextPiece() {
+    gotoxy(W + 3, 14);
+    cout << "Next:";
+    
+    if (nextPiece != nullptr) {
+        for (int i = 0; i < 4; i++) {
+            gotoxy(W + 3, 15 + i);
+            cout << "    "; // Clear dòng cũ
+            gotoxy(W + 3, 15 + i);
+            for (int j = 0; j < 4; j++) {
+                if (nextPiece->getCell(i, j) != ' ') {
+                    setTextColor(nextPiece->color);
+                    cout << "▓";
+                } else {
+                    cout << " ";
+                }
+            }
+            setTextColor(0);
+        }
+    }
+}
+
+
 void drawUI() {
     gotoxy(W + 3, 1);
     cout << "TETRIS GAME";
@@ -126,6 +149,9 @@ void drawUI() {
     cout << "SPACE   - Hard Drop";
     gotoxy(W + 3, 12);
     cout << "Q       - Quit";
+
+    // Vẽ khối tiếp theo
+    drawNextPiece();
 }
 
 void draw() {
@@ -262,7 +288,8 @@ void removeLine() {
     }
 }
 
-Piece* createRandomPiece() {
+// next piece show logic 
+Piece* createNewPiece() {
     int type = rand() % 7;
     switch (type) {
         case 0: return new IPiece();
@@ -274,4 +301,14 @@ Piece* createRandomPiece() {
         case 6: return new LPiece();
         default: return new OPiece();
     }
+}
+
+// Lấy piece tiếp theo và tạo piece mới cho hàng đợi
+Piece* getNextPiece() {
+    if (nextPiece == nullptr) {
+        nextPiece = createNewPiece();
+    }
+    Piece* current = nextPiece;
+    nextPiece = createNewPiece();
+    return current;
 }

@@ -40,3 +40,4 @@ struct GameRecord;
 // Game variables
 int x = 4, y = 0;
 Piece* currentPiece = nullptr;
+Piece* nextPiece = nullptr;  // Thêm biến này
