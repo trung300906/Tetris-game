@@ -30,3 +30,9 @@ file hpp should be just header where put class header or header of function
 └── tetris_main.cxx \\ main
 ```
 4 directories, 16 files
+## ABOUT MEMBERS
+24521891 - TA DUY TRUNG
+24520175 - NGUYEN TRAN GIA BAO
+24521823 - VO LE UYEN TRANG
+24521907 - HUYNH MINH TU
+23521638 - LE CAO TRI 
