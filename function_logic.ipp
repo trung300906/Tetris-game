@@ -252,7 +252,7 @@ void hardDrop() {
 
 void updateSpeed() {
     level = score / 100 + 1;
-    gameSpeed = 500 - (level - 1) * 30;
+    gameSpeed -= (level - 1) * 30;
     if (gameSpeed < 100) gameSpeed = 100;
 }
 
