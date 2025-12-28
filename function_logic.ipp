@@ -247,7 +247,6 @@ void hardDrop() {
     boardDelBlock();
     while (canMove(0, 1)) {
         y++;
-        score += 2; // Bonus points for hard drop
     }
 }
 

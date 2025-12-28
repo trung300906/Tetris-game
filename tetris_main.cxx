@@ -37,7 +37,6 @@ void playGame() {
             else if (c == 's' || c == 'S') {
                 if (canMove(0, 1)) {
                     y++;
-                    score += 1;
                 }
             }
             else if (c == 'w' || c == 'W') {
@@ -55,7 +54,7 @@ void playGame() {
                 char k = getch();
                 if (k == 75 && canMove(-1, 0)) x--; // Left
                 if (k == 77 && canMove(1, 0)) x++;  // Right
-                if (k == 80 && canMove(0, 1)) { y++; score++; } // Down
+                if (k == 80 && canMove(0, 1)) { y++; } // Down
                 if (k == 72) rotateWithWallKick();  // Up
             }
             #else
@@ -64,7 +63,7 @@ void playGame() {
                 char k = getch();
                 if (k == 'D' && canMove(-1, 0)) x--;
                 if (k == 'C' && canMove(1, 0)) x++;
-                if (k == 'B' && canMove(0, 1)) { y++; score++; }
+                if (k == 'B' && canMove(0, 1)) { y++; }
                 if (k == 'A') rotateWithWallKick();
             }
             #endif
