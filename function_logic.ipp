@@ -260,11 +260,11 @@ void removeLine() {
     int linesCleared = 0;
     for (int i = H - 2; i > 0; i--) {
         int count = 0;
-        for (int j = 1; j < W - 1; j++) if (board[i][j] != ' ') count++;
+        for (int j = 1; j < W - 1; j++) if (board[i][j] != ' ') count++; // Đếm số ô đã lấp đầy trong dòng
         
-        if (count == W - 2) {
+        if (count == W - 2) { // Dòng đầy
             linesCleared++;
-            for (int k = i; k > 0; k--) {
+            for (int k = i; k > 0; k--) { // Dời tất cả các dòng trên xuống dưới 1 dòng
                 for (int j = 1; j < W - 1; j++) {
                     board[k][j] = board[k-1][j];
                     boardColors[k][j] = boardColors[k-1][j]; // Dời màu xuống
