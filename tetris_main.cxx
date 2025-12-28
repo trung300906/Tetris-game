@@ -23,7 +23,7 @@ void playGame() {
     showCursor(false);
     
     int frameCounter = 0;
-    // Tăng 5% tốc độ rơi mỗi khi block được đặt xuống
+    // Tăng 3% tốc độ rơi mỗi khi block được đặt xuống
     gameSpeed = (int)(gameSpeed * 0.97);
     if (gameSpeed < 50) gameSpeed = 50; // Giới hạn tối thiểu
     int dropSpeed = gameSpeed / 20;
