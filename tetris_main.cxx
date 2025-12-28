@@ -129,7 +129,9 @@ end:
 
 int main() {
     srand(time(0));
-    #ifndef _WIN32
+    #ifdef _WIN32
+    setupWindowsConsole();
+    #else
     setupTerminal();
     #endif
 

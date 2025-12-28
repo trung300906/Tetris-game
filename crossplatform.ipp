@@ -1,5 +1,18 @@
 #pragma once
-#ifndef _WIN32
+#ifdef _WIN32
+void setupWindowsConsole() {
+    // Setup UTF-8 cho console
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+    
+    // Bật xử lý ANSI escape sequences (Windows 10+)
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD dwMode = 0;
+    GetConsoleMode(hOut, &dwMode);
+    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    SetConsoleMode(hOut, dwMode);
+}
+#else
 struct termios orig_termios;
 
 void setupTerminal() {
