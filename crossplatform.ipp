@@ -1,5 +1,6 @@
 #pragma once
 #ifdef _WIN32
+#define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
 void setupWindowsConsole() {
     // Setup UTF-8 cho console
     SetConsoleOutputCP(CP_UTF8);
